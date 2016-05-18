@@ -17,12 +17,13 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = "treeGrowingSimulator", version = "0.0.3", name = "Tree Growing Simulator 2014")
+@Mod(modid = "treeGrowingSimulator", version = "0.0.4", name = "Tree Growing Simulator 2014")
 public class TreeSimulator {
 
 	public static int waitTime;
 	public static boolean showParticles;
 	public static int energyPerBump;
+	public static boolean enableSprint;
 	
 	public static final String CHANNEL = "TGS2014";
 	
@@ -73,7 +74,8 @@ public class TreeSimulator {
 		waitTime = config.get("Tweaks", "waitTime", 100, "The amount of ticks (times 5) you must be crouching or sprinting before bonemeal is applied").getInt();
 		showParticles = config.get("Tweaks", "showParticles", true, "Show bonemeal particles when appropriate. Not sure why you would turn this off, but eh").getBoolean(true);
 		energyPerBump = config.get("Tweaks", "energyPerBump", 25, "Energy (in RF) that is gotten each time the engine is \"bumped,\" meaning every time you crouch or sprint").getInt();
-		
+		enableSprint = config.get("Tweaks", "enableSprint", true, "Enable Sprint Feature").getBoolean(true);
+
 		config.save();
 	}
 }

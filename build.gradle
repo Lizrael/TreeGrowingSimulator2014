@@ -17,58 +17,43 @@ buildscript {
 
 apply plugin: 'forge'
 
-ext.configFile = file "build.properties"
-
-configFile.withReader {
-    // Load config.  It shall from now be referenced as simply config or project.config
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config = new ConfigSlurper().parse prop
-}
-
-// Finds and sets version data
-task buildInfo {
-    def cmd = "git rev-parse --short HEAD"
-    def proc = cmd.execute()
-    proc.waitFor()
-    if (proc.exitValue() == 0) {
-        ext.revision = proc.text.trim()
-    } else {
-        ext.revision = "GITBORK"
-    }
-    if (System.getenv().BUILD_NUMBER != null) {
-        ext.buildNum = "${System.getenv().BUILD_NUMBER}"
-    } else {
-        ext.buildNum = "DEV.${project.buildInfo.revision}"
-    }
-}
-ext.artifact_version = 'NFG'
-if (System.getenv().ARTIFACT_VERSION == null) {
-    artifact_version = "${config.mod_version}"
-}
-if (System.getenv().ARTIFACT_VERSION != null) {
-    artifact_version = "${system.getenv().ARTIFACT_VERSION}"
-}
-
-version = "MC${config.minecraft_version}-${artifact_version}-${buildInfo.buildNum}"
-def actualVersion = "${artifact_version}-${buildInfo.buildNum}"
+version = "0.0.4"
+group= "tterrag.treesimulator.treeGrowingSimulator" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "treeGrowingSimulator"
 
 minecraft {
-	version = "${config.minecraft_version}-${config.forge_version}"
+    version = "1.7.10-10.13.4.1614-1.7.10"
+    runDir = "eclipse"
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    // you may put jars on which you depend on in ./libs
+    // or you may define them like so..
+    //compile "some.group:artifact:version:classifier"
+    //compile "some.group:artifact:version"
+      
+    // real examples
+    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // for more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
 }
 
 processResources
 {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':actualVersion, 'mcversion':project.minecraft.version
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info

@@ -62,7 +62,7 @@ public class TickHandlerTGS
 				if (coords.size() == 0)
 					return;
 
-				if (player.isSprinting())
+				if (player.isSprinting() && TreeSimulator.enableSprint)
 				{
 					movementCounter++;
 					doEngines(coords, player.worldObj);
